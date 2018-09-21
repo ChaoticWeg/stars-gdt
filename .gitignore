@@ -1,8 +1,9 @@
 # Vim swapfiles
 *.swp
 
-# Log files
+# Log files and test dependencies
 logs/
+test-deps/
 
 # VSCode-specific settings and scripts
 .vscode/
