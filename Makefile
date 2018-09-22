@@ -1,7 +1,7 @@
 .PHONY: install analyze test
 
 install:
-	pip install -r requirements.txt
+	pip install -r requirements.txt --user
 
 analyze:
 	bash analyze.sh
