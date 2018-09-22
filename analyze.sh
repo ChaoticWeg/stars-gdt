@@ -2,7 +2,7 @@
 thisdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 export TZ='America/Chicago'
-parse_date() { date -d "$(cat "${thisdir}/logs/next_game_date.log")" +"%A, %B %Y at %H:%M %Z"; };
+parse_date() { date -d "$(cat "${thisdir}/logs/next_game_date.log")" +"%A, %B %d, %Y at %H:%M %Z"; };
 
 python "${thisdir}/analyze.py" > "${thisdir}/logs/analyze.log"
 bash "${thisdir}/test-deps/discord.sh" \
