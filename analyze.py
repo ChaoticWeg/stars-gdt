@@ -1,5 +1,7 @@
 import nhl
 from datetime import datetime, timedelta
+from dateutil import parser as dt_parser
+from dateutil import tz     as dt_tz
 
 """ filter irrelevant dates out of the list """
 filter_dates = lambda dates: [ date for date in dates if date["totalGames"] > 0 ]
@@ -23,10 +25,10 @@ def run():
     relevant_dates = filter_dates(all_dates)
     upcoming_games = flatten_dates(relevant_dates)
 
-    # remember: this is UTC!
-    next_game_date = min([ datetime.strptime(game["gameDate"], "%Y-%m-%dT%H:%M:%SZ") for game in upcoming_games ])
-    print("Next Stars game is " + next_game_date.strftime("%m-%d-%Y at %H:%M:%S"))
-
+    # ZULU TIME
+    next_game_date = min([ dt_parser.parse(game["gameDate"]) for game in upcoming_games ])
+    with open("logs/next_game_date.txt", "w") as outfile:
+        outfile.write(str(next_game_date))
 
 if __name__ == "__main__":
     run()
