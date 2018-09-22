@@ -1,8 +1,15 @@
 import nhl
 from datetime import datetime, timedelta
 
+""" filter irrelevant dates out of the list """
+filter_dates = lambda dates: [ date for date in dates if date["totalGames"] > 0 ]
+
+""" flatten a list of schedule dates into their games """
+flatten_dates = lambda dates: [ game for date in dates for game in date["games"] ]
 
 def run():
+    """ main executing function """
+
     start_date = datetime.utcnow() - timedelta(days=1)
     end_date   = datetime.utcnow() + timedelta(days=4)
 
@@ -12,11 +19,13 @@ def run():
         print("looks like there aren't any games for a while! bailing out.")
         return
     
-    relevant_dates = [ date["games"] for date in sched["dates"] if date["totalGames"] > 0 ]
-    upcoming_games = [ game["gameDate"] for games in relevant_dates for game in games ]
+    all_dates      = sched["dates"]
+    relevant_dates = filter_dates(all_dates)
+    upcoming_games = flatten_dates(relevant_dates)
 
-    next_game_date = min([ datetime.strptime(dt, "%Y-%m-%dT%H:%M:%SZ") for dt in upcoming_games ])
-    print("next stars game day is " + next_game_date.strftime("%m-%d-%Y at %H:%M:%S"))
+    # remember: this is UTC!
+    next_game_date = min([ datetime.strptime(game["gameDate"], "%Y-%m-%dT%H:%M:%SZ") for game in upcoming_games ])
+    print("Next Stars game is " + next_game_date.strftime("%m-%d-%Y at %H:%M:%S"))
 
 
 if __name__ == "__main__":
